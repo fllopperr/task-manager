@@ -1,0 +1,22 @@
+model Column {
+  id       String @id @default(cuid())
+  title    String @db.VarChar(255)
+  position Int
+
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+  deletedAt DateTime? @map("deleted_at")
+
+  ownerId String @map("owner_id")
+  owner   User   @relation(fields: [ownerId], references: [id], onDelete: Cascade)
+
+  boardId String @map("board_id")
+  board   Board  @relation(fields: [boardId], references: [id], onDelete: Cascade)
+
+  tasks Task[]
+
+  @@unique([position, boardId])
+  @@index([ownerId])
+  @@index([boardId])
+  @@map("columns")
+}

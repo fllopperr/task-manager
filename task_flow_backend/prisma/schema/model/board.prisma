@@ -1,0 +1,31 @@
+model Board {
+  id        String        @id @default(cuid())
+  title     String        @db.VarChar(255)
+  icon      String?       @db.VarChar(100)
+
+  createdAt DateTime      @default(now()) @map("created_at")
+  updatedAt DateTime      @updatedAt @map("updated_at")
+  deletedAt DateTime?     @map("deleted_at")
+
+  ownerId   String        @map("owner_id")
+  owner     User          @relation("OwnedBoards", fields: [ownerId], references: [id], onDelete: Cascade)
+  members   BoardMember[] @relation("BoardMembers")
+  columns   Column[]
+
+  @@index([ownerId])
+  @@map("boards")
+}
+
+model BoardMember {
+  id      String @id @default(cuid())
+  role    String @default("MEMBER")
+
+  userId  String @map("user_id")
+  user    User   @relation("UserMemberShips", fields: [userId], references: [id])
+
+  boardId String @map("board_id")
+  board   Board  @relation("BoardMembers", fields: [boardId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, boardId])
+  @@map("board_members")
+}

@@ -1,0 +1,20 @@
+model User {
+  id               String        @id @default(cuid())
+  email            String        @unique
+  username         String        @unique
+  password         String
+
+  createdAt        DateTime      @default(now()) @map("created_at")
+  updatedAt        DateTime      @updatedAt @map("updated_at")
+  deletedAt        DateTime?     @map("deleted_at")
+
+  ownedTasks       Task[]        @relation("UserOwnedTasks")
+  assignedTasks    Task[]        @relation("UserAssignedTasks")
+  ownedComments    Comment[]     @relation("UserOwnedComments")
+  authoredComments Comment[]     @relation("UserAuthoredComments")
+  columns          Column[]
+  ownedBoards      Board[]       @relation("OwnedBoards")
+  memberBoards     BoardMember[] @relation("UserMemberShips")
+
+  @@map("users")
+}
