@@ -54,7 +54,9 @@ Bun.serve<WSData>({
 			ws.data.closed = wsServer.opened(
 				{
 					protocol: (ws as any).protocol || 'graphql-transport-ws',
-					send: data => ws.send(data),
+					send: data => {
+						ws.send(data)
+					},
 					close: (code, reason) => ws.close(code, reason),
 					onMessage: cb => messageListeners.set(connectionId, cb)
 				},
