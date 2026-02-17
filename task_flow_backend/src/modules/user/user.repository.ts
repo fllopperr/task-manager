@@ -1,4 +1,4 @@
-import { Prisma, PrismaClient } from '../generated/prisma/index.js'
+import type { Prisma, PrismaClient } from '../../generated/prisma/index.js'
 
 export class UserRepository {
 	constructor(private prisma: PrismaClient) {}
@@ -14,6 +14,13 @@ export class UserRepository {
 		})
 	}
 
+	async findMany() {
+		return this.prisma.user.findMany({
+			select: { id: true, email: true, username: true },
+			orderBy: { username: 'asc' }
+		})
+	}
+
 	async create(data: Prisma.UserCreateInput) {
 		return this.prisma.user.create({
 			data,
@@ -21,7 +28,7 @@ export class UserRepository {
 		})
 	}
 
-	async exists(email: string, username: string) {
+	async exists(email: string, username: string): Promise<boolean> {
 		const count = await this.prisma.user.count({
 			where: { OR: [{ email }, { username }] }
 		})

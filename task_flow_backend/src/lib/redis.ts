@@ -1,9 +1,12 @@
 import { Redis } from 'ioredis'
-import 'dotenv/config'
 
-const redisUrl = process.env.REDIS_URL || 'redis://localhost:6379'
+const REDIS_URL = process.env.REDIS_URL
 
-const redis = new Redis(redisUrl, {
+if (!REDIS_URL) {
+	throw new Error('Missing environment variable: REDIS_URL')
+}
+
+export const redis = new Redis(REDIS_URL, {
 	maxRetriesPerRequest: null,
 	retryStrategy: (times: number): number => {
 		const delay = Math.min(times * 50, 2000)
@@ -17,8 +20,5 @@ redis.on('error', error => {
 })
 
 redis.on('connect', () => {
-	console.log('\x1b[32m[Redis]\x1b[0m Connected to', redisUrl)
+	console.log('\x1b[32m[Redis]\x1b[0m Connected to', REDIS_URL)
 })
-
-export { redis }
-export default redis

@@ -86,10 +86,8 @@ export const typeDefs = `
     updatedAt: String!
     deletedAt: String
     taskId: String!
-    ownerId: String!
     userId: String!
     task: Task!
-    owner: User!
     user: User!
   }
 
@@ -130,7 +128,7 @@ export const typeDefs = `
   }
 
   # ============================================
-  # SUBSCRIPTIONS (Real-time Events)
+  # SUBSCRIPTIONS
   # ============================================
 
   type Subscription {
@@ -164,33 +162,33 @@ export const typeDefs = `
   # ============================================
 
   type Mutation {
-    # -------------------- Auth --------------------
+    # Auth
     login(input: LoginInput!): AuthPayload!
     register(input: RegisterInput!): AuthPayload!
 
-    # -------------------- Boards --------------------
+    # Boards
     createBoard(input: CreateBoardInput!): Board!
     deleteBoard(id: ID!): Boolean!
     addBoardMember(boardId: ID!, email: String!, role: BoardRole): BoardMember!
     removeBoardMember(boardId: ID!, userId: ID!): Boolean!
 
-    # -------------------- Tasks --------------------
+    # Tasks
     createTask(input: CreateTaskInput!): Task!
     updateTask(id: ID!, input: UpdateTaskInput!): Task!
     moveTask(input: MoveTaskInput!): Task!
     deleteTask(id: ID!): Boolean!
 
-    # -------------------- Comments --------------------
+    # Comments
     createComment(input: CreateCommentInput!): Comment!
     updateComment(id: ID!, input: UpdateCommentInput!): Comment!
     deleteComment(id: ID!): Boolean!
 
-    # -------------------- Columns --------------------
+    # Columns
     createColumn(input: CreateColumnInput!): Column!
     updateColumn(id: ID!, input: UpdateColumnInput!): Column!
     deleteColumn(id: ID!): Boolean!
 
-    # -------------------- Real-time Collaboration --------------------
+    # Real-time
     updatePresence(boardId: ID!, status: PresenceStatus!): Boolean!
     setTyping(taskId: ID!, isTyping: Boolean!): Boolean!
   }
@@ -199,7 +197,6 @@ export const typeDefs = `
   # INPUT TYPES
   # ============================================
 
-  # Auth Inputs
   input LoginInput {
     email: String!
     password: String!
@@ -211,13 +208,11 @@ export const typeDefs = `
     username: String!
   }
 
-  # Board Inputs
   input CreateBoardInput {
     title: String!
     icon: String
   }
 
-  # Task Inputs
   input CreateTaskInput {
     title: String!
     columnId: String!
@@ -240,7 +235,6 @@ export const typeDefs = `
     newPosition: Float!
   }
 
-  # Comment Inputs
   input CreateCommentInput {
     content: String!
     taskId: String!
@@ -250,7 +244,6 @@ export const typeDefs = `
     content: String!
   }
 
-  # Column Inputs
   input CreateColumnInput {
     title: String!
     boardId: String!

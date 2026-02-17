@@ -1,10 +1,12 @@
-import { PrismaClient } from '../generated/prisma/index.js'
+import { PrismaClient } from '../../generated/prisma/index.js'
 import { Redis } from 'ioredis'
 
 interface BoardStats {
 	totalTasks: number
 	updatedAt: string
 }
+
+const STATS_TTL_SECONDS = 3600
 
 export class StatsService {
 	constructor(
@@ -20,19 +22,14 @@ export class StatsService {
 		const cacheKey = this.getCacheKey(boardId)
 
 		try {
-			const cachedData = await this.redis.get(cacheKey)
-			if (cachedData) {
-				return JSON.parse(cachedData)
-			}
+			const cached = await this.redis.get(cacheKey)
+			if (cached) return JSON.parse(cached)
 		} catch (error) {
 			console.error('[Redis Error] Get:', error)
 		}
 
 		const totalTasks = await this.prisma.task.count({
-			where: {
-				column: { boardId },
-				deletedAt: null
-			}
+			where: { column: { boardId }, deletedAt: null }
 		})
 
 		const stats: BoardStats = {
@@ -41,7 +38,12 @@ export class StatsService {
 		}
 
 		try {
-			await this.redis.set(cacheKey, JSON.stringify(stats), 'EX', 3600)
+			await this.redis.set(
+				cacheKey,
+				JSON.stringify(stats),
+				'EX',
+				STATS_TTL_SECONDS
+			)
 		} catch (error) {
 			console.error('[Redis Error] Set:', error)
 		}
@@ -50,9 +52,8 @@ export class StatsService {
 	}
 
 	async invalidateCache(boardId: string): Promise<void> {
-		const cacheKey = this.getCacheKey(boardId)
 		try {
-			await this.redis.del(cacheKey)
+			await this.redis.del(this.getCacheKey(boardId))
 		} catch (error) {
 			console.error('[Redis Error] Invalidate:', error)
 		}
