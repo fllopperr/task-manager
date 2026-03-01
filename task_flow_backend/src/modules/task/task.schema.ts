@@ -10,7 +10,8 @@ export const CreateTaskSchema = z.object({
 	columnId: z.string().min(1, 'columnId обязателен'),
 	priority: PriorityEnum.optional().default('MEDIUM'),
 	description: z.string().max(10000).optional(),
-	tags: z.array(z.string().max(50)).max(20).optional().default([])
+	tags: z.array(z.string().max(50)).max(20).optional().default([]),
+	limitDate: z.string().optional().nullable()
 })
 
 export const UpdateTaskSchema = z.object({
@@ -18,7 +19,10 @@ export const UpdateTaskSchema = z.object({
 	priority: PriorityEnum.optional(),
 	description: z.string().max(10000).optional(),
 	tags: z.array(z.string().max(50)).max(20).optional(),
-	assigneeId: z.string().nullable().optional()
+	assigneeId: z.string().nullable().optional(),
+	limitDate: z.string().optional().nullable(),
+	columnId: z.string().optional(),
+	position: z.number().positive().optional()
 })
 
 export const MoveTaskSchema = z.object({

@@ -10,6 +10,15 @@ export const typeDefs = `
     URGENT
   }
 
+  enum Tags {
+  	Bug
+   	API
+    Feature
+    Refactor
+    Design
+    Marketing
+  }
+
   enum BoardRole {
     ADMIN
     MEMBER
@@ -73,6 +82,8 @@ export const typeDefs = `
     columnId: String!
     ownerId: String!
     assigneeId: String
+    limitDate: String
+    createdAt: String!
     column: Column
     owner: User
     assignee: User
@@ -162,6 +173,9 @@ export const typeDefs = `
   # ============================================
 
   type Mutation {
+  	# User
+    updateUser(input: UpdateUserInput!): User!
+
     # Auth
     login(input: LoginInput!): AuthPayload!
     register(input: RegisterInput!): AuthPayload!
@@ -219,6 +233,7 @@ export const typeDefs = `
     priority: Priority
     description: String
     tags: [String!]
+    limitDate: String
   }
 
   input UpdateTaskInput {
@@ -227,6 +242,9 @@ export const typeDefs = `
     description: String
     tags: [String!]
     assigneeId: String
+    limitDate: String
+    columnId: String
+    position: Float
   }
 
   input MoveTaskInput {
@@ -253,5 +271,10 @@ export const typeDefs = `
   input UpdateColumnInput {
     title: String
     position: Float
+  }
+
+  input UpdateUserInput {
+  	username: String
+    email: String
   }
 `

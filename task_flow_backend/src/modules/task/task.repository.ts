@@ -21,22 +21,46 @@ export class TaskRepository {
 				priority: data.priority ?? 'MEDIUM',
 				tags: data.tags ?? [],
 				description: data.description ?? '',
+				limitDate: data.limitDate ? new Date(data.limitDate) : null,
 				position: newPosition
 			},
 			include: {
 				column: { select: { boardId: true } },
-				owner: { select: { id: true, username: true, email: true } }
+				owner: { select: { id: true, username: true, email: true } },
+				assignee: { select: { id: true, username: true, email: true } }
 			}
 		})
 	}
 
 	async update(taskId: string, data: UpdateTaskInput) {
+		const updateData: any = {}
+
+		if (data.title !== undefined) updateData.title = data.title
+		if (data.description !== undefined)
+			updateData.description = data.description
+		if (data.priority !== undefined) updateData.priority = data.priority
+		if (data.tags !== undefined) updateData.tags = data.tags
+		if (data.assigneeId !== undefined) updateData.assigneeId = data.assigneeId
+		if (data.columnId !== undefined) updateData.columnId = data.columnId
+		if (data.position !== undefined) updateData.position = data.position
+		if (data.limitDate !== undefined) {
+			updateData.limitDate = data.limitDate ? new Date(data.limitDate) : null
+		}
+
 		return this.prisma.task.update({
 			where: { id: taskId },
-			data,
+			data: updateData,
 			include: {
 				column: { select: { boardId: true } },
-				owner: { select: { id: true, username: true, email: true } }
+				owner: { select: { id: true, username: true, email: true } },
+				assignee: { select: { id: true, username: true, email: true } },
+				comments: {
+					where: { deletedAt: null },
+					include: {
+						user: { select: { id: true, username: true, email: true } }
+					},
+					orderBy: { createdAt: 'asc' }
+				}
 			}
 		})
 	}
@@ -68,11 +92,14 @@ export class TaskRepository {
 		return this.prisma.task.findUnique({
 			where: { id: taskId },
 			include: {
-				owner: { select: { id: true, username: true } },
+				owner: { select: { id: true, username: true, email: true } },
+				assignee: { select: { id: true, username: true, email: true } },
 				column: { select: { boardId: true } },
 				comments: {
 					where: { deletedAt: null },
-					include: { user: { select: { id: true, username: true } } },
+					include: {
+						user: { select: { id: true, username: true, email: true } }
+					},
 					orderBy: { createdAt: 'asc' }
 				}
 			}

@@ -1,4 +1,5 @@
 import type { Prisma, PrismaClient } from '../../generated/prisma/index.js'
+import type { UpdateUserInput } from './user.schema.js'
 
 export class UserRepository {
 	constructor(private prisma: PrismaClient) {}
@@ -14,24 +15,18 @@ export class UserRepository {
 		})
 	}
 
-	async findMany() {
-		return this.prisma.user.findMany({
-			select: { id: true, email: true, username: true },
-			orderBy: { username: 'asc' }
+	async update(userId: string, data: UpdateUserInput) {
+		return this.prisma.user.update({
+			where: { id: userId },
+			data: {
+				username: data.username,
+				email: data.email
+			},
+			select: {
+				id: true,
+				username: true,
+				email: true
+			}
 		})
-	}
-
-	async create(data: Prisma.UserCreateInput) {
-		return this.prisma.user.create({
-			data,
-			select: { id: true, email: true, username: true }
-		})
-	}
-
-	async exists(email: string, username: string): Promise<boolean> {
-		const count = await this.prisma.user.count({
-			where: { OR: [{ email }, { username }] }
-		})
-		return count > 0
 	}
 }

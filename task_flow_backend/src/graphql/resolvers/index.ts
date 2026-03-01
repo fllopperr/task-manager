@@ -4,27 +4,7 @@ import { columnResolvers } from './column.resolver.js'
 import { taskResolvers } from './task.resolver.js'
 import { commentResolvers } from './comment.resolver.js'
 import { subscriptionResolvers } from './subscription.resolver.js'
-import type { GraphQlContext } from '../../lib/context.js'
-
-const userResolvers = {
-	Query: {
-		me: async (_: unknown, __: unknown, ctx: GraphQlContext) => {
-			if (!ctx.userId) return null
-			return ctx.prisma.user.findUnique({
-				where: { id: ctx.userId },
-				include: { ownedBoards: true }
-			})
-		},
-
-		users: (_: unknown, __: unknown, ctx: GraphQlContext) => {
-			if (!ctx.userId) throw new Error('Unauthorized')
-			return ctx.prisma.user.findMany({
-				select: { id: true, email: true, username: true },
-				orderBy: { username: 'asc' }
-			})
-		}
-	}
-}
+import { userResolvers } from './user.resolver.js'
 
 export const resolvers = {
 	Query: {
@@ -33,16 +13,19 @@ export const resolvers = {
 	},
 	Mutation: {
 		...authResolvers.Mutation,
+		...userResolvers.Mutation,
 		...boardResolvers.Mutation,
 		...columnResolvers.Mutation,
 		...taskResolvers.Mutation,
 		...commentResolvers.Mutation,
 		...subscriptionResolvers.Mutation
 	},
-	Subscription: {
-		...subscriptionResolvers.Subscription
-	},
+	Subscription: subscriptionResolvers.Subscription,
+
 	Board: boardResolvers.Board,
 	Column: columnResolvers.Column,
-	Task: taskResolvers.Task
+	Task: taskResolvers.Task,
+	User: {
+		boards: (parent: any) => parent.ownedBoards || []
+	}
 }
