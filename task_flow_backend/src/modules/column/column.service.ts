@@ -16,12 +16,7 @@ export class ColumnService {
 	async createColumn(userId: string, rawInput: unknown) {
 		const data = CreateColumnSchema.parse(rawInput)
 
-		const accessible = await this.columnRepo.isAccessible(
-			// Проверяем доступ через boardId — нам нужен BoardRepository
-			// Упрощённо: создаём колонку, БД проверит FK
-			'dummy',
-			userId
-		)
+		const accessible = await this.columnRepo.isAccessible('dummy', userId)
 
 		const column = await this.columnRepo.create(userId, data)
 

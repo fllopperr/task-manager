@@ -1,7 +1,5 @@
 export const typeDefs = `
-  # ============================================
   # ENUMS
-  # ============================================
 
   enum Priority {
     LOW
@@ -30,9 +28,7 @@ export const typeDefs = `
     away
   }
 
-  # ============================================
   # TYPES
-  # ============================================
 
   type User {
     id: ID!
@@ -112,9 +108,7 @@ export const typeDefs = `
     updatedAt: String!
   }
 
-  # ============================================
   # REAL-TIME COLLABORATION TYPES
-  # ============================================
 
   type UserPresence {
     userId: ID!
@@ -126,9 +120,7 @@ export const typeDefs = `
     userName: String!
   }
 
-  # ============================================
   # QUERIES
-  # ============================================
 
   type Query {
     me: User
@@ -138,9 +130,7 @@ export const typeDefs = `
     boardStats(boardId: String!): BoardStats!
   }
 
-  # ============================================
   # SUBSCRIPTIONS
-  # ============================================
 
   type Subscription {
     # Task Events
@@ -168,9 +158,7 @@ export const typeDefs = `
     userTyping(taskId: ID!): UserTyping!
   }
 
-  # ============================================
   # MUTATIONS
-  # ============================================
 
   type Mutation {
   	# User
@@ -207,9 +195,7 @@ export const typeDefs = `
     setTyping(taskId: ID!, isTyping: Boolean!): Boolean!
   }
 
-  # ============================================
   # INPUT TYPES
-  # ============================================
 
   input LoginInput {
     email: String!

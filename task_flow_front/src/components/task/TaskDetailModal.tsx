@@ -81,9 +81,7 @@ export const TaskDetailModal = memo(function TaskDetailModal() {
 				</header>
 
 				<div className='grid grid-cols-12 gap-12'>
-					{/* LEFT COLUMN */}
 					<div className='col-span-7 space-y-8'>
-						{/* Description */}
 						<div className='space-y-2.5'>
 							<label className='text-[14px] text-white/90 font-medium'>
 								Описание
@@ -100,8 +98,6 @@ export const TaskDetailModal = memo(function TaskDetailModal() {
 								placeholder='Добавьте описание...'
 							/>
 						</div>
-
-						{/* Comments */}
 						<div className='space-y-2.5'>
 							<label className='text-[14px] text-white/90 font-medium'>
 								Комментарии
@@ -153,16 +149,14 @@ export const TaskDetailModal = memo(function TaskDetailModal() {
 						</div>
 					</div>
 
-					{/* RIGHT COLUMN */}
 					<div className='col-span-5 space-y-5'>
-						{/* Status - ИСПРАВЛЕН SelectValue */}
 						<div className='space-y-2'>
 							<label className='text-[14px] text-white/80'>Статус</label>
 							<Select
 								value={task.columnId}
 								onValueChange={v => handleUpdate({ columnId: v })}
 							>
-								<SelectTrigger className='w-full bg-transparent border border-white/20 h-10 rounded-[8px] px-3 text-[14px] text-white [&>span]:text-white'>
+								<SelectTrigger className='w-full bg-transparent border border-white/20 h-10 rounded-[8px] px-3 text-[14px] text-white'>
 									<SelectValue placeholder='Выберите статус' />
 								</SelectTrigger>
 								<SelectContent className='bg-[#1A1D21] border-white/10'>
@@ -217,7 +211,6 @@ export const TaskDetailModal = memo(function TaskDetailModal() {
 							</Select>
 						</div>
 
-						{/* Due Date */}
 						<div className='space-y-2'>
 							<label className='text-[14px] text-white/80'>Срок</label>
 							<input
@@ -232,7 +225,6 @@ export const TaskDetailModal = memo(function TaskDetailModal() {
 							/>
 						</div>
 
-						{/* Метки - Здесь span оправдан, т.к. это мультивыбор */}
 						<div className='space-y-2'>
 							<label className='text-[14px] text-white/80'>Метки</label>
 							<Select onValueChange={toggleTag}>
@@ -270,7 +262,6 @@ export const TaskDetailModal = memo(function TaskDetailModal() {
 							)}
 						</div>
 
-						{/* Исполнители - ИСПРАВЛЕНЫ value и SelectValue */}
 						<div className='space-y-2'>
 							<label className='text-[14px] text-white/80'>Исполнители</label>
 							<Select
@@ -279,7 +270,7 @@ export const TaskDetailModal = memo(function TaskDetailModal() {
 									handleUpdate({ assigneeId: v === 'none' ? null : v })
 								}
 							>
-								<SelectTrigger className='w-full bg-transparent border border-white/20 h-10 rounded-[8px] px-3 text-[14px] text-white [&>span]:text-white'>
+								<SelectTrigger className='w-full bg-transparent border border-white/20 h-10 rounded-[8px] px-3 text-[14px] text-white'>
 									<SelectValue placeholder='Назначить...' />
 								</SelectTrigger>
 								<SelectContent className='bg-[#1A1D21] border-white/10'>
@@ -289,7 +280,6 @@ export const TaskDetailModal = memo(function TaskDetailModal() {
 									>
 										Не назначен
 									</SelectItem>
-
 									{boardData?.board?.owner && (
 										<SelectItem
 											key={boardData.board.owner.id}
@@ -299,7 +289,6 @@ export const TaskDetailModal = memo(function TaskDetailModal() {
 											{boardData.board.owner.username} (владелец)
 										</SelectItem>
 									)}
-
 									{boardData?.board?.members
 										?.filter(
 											(m: any) => m.user.id !== boardData.board.owner?.id

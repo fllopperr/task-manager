@@ -8,23 +8,14 @@ function requireAuth(ctx: GraphQlContext): string {
 
 export const taskResolvers = {
 	Mutation: {
-		createTask: (
-			_: unknown,
-			{ input }: { input: unknown },
-			ctx: GraphQlContext
-		) => {
+		createTask: (_: any, { input }: any, ctx: GraphQlContext) => {
 			const userId = requireAuth(ctx)
 			return new TaskService(ctx.prisma, ctx.redis, ctx.pubSub).createTask(
 				userId,
 				input
 			)
 		},
-
-		updateTask: (
-			_: unknown,
-			{ id, input }: { id: string; input: unknown },
-			ctx: GraphQlContext
-		) => {
+		updateTask: (_: any, { id, input }: any, ctx: GraphQlContext) => {
 			const userId = requireAuth(ctx)
 			return new TaskService(ctx.prisma, ctx.redis, ctx.pubSub).updateTask(
 				id,
@@ -32,20 +23,14 @@ export const taskResolvers = {
 				input
 			)
 		},
-
-		moveTask: (
-			_: unknown,
-			{ input }: { input: unknown },
-			ctx: GraphQlContext
-		) => {
+		moveTask: (_: any, { input }: any, ctx: GraphQlContext) => {
 			const userId = requireAuth(ctx)
 			return new TaskService(ctx.prisma, ctx.redis, ctx.pubSub).moveTask(
 				userId,
 				input
 			)
 		},
-
-		deleteTask: (_: unknown, { id }: { id: string }, ctx: GraphQlContext) => {
+		deleteTask: (_: any, { id }: any, ctx: GraphQlContext) => {
 			const userId = requireAuth(ctx)
 			return new TaskService(ctx.prisma, ctx.redis, ctx.pubSub).deleteTask(
 				id,
@@ -55,11 +40,17 @@ export const taskResolvers = {
 	},
 
 	Task: {
-		owner: (parent: any, _: unknown, ctx: GraphQlContext) =>
+		owner: (parent: any, _: any, ctx: GraphQlContext) =>
 			parent.owner ||
 			ctx.prisma.user.findUnique({ where: { id: parent.ownerId } }),
 
-		comments: (parent: any, _: unknown, ctx: GraphQlContext) =>
+		assignee: (parent: any, _: any, ctx: GraphQlContext) => {
+			if (parent.assignee) return parent.assignee
+			if (!parent.assigneeId) return null
+			return ctx.prisma.user.findUnique({ where: { id: parent.assigneeId } })
+		},
+
+		comments: (parent: any, _: any, ctx: GraphQlContext) =>
 			parent.comments ||
 			ctx.prisma.comment.findMany({
 				where: { taskId: parent.id, deletedAt: null },

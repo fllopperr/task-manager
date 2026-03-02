@@ -1,14 +1,15 @@
 export function useDateFormatter() {
 	const parseSafeDate = (dateVal: any) => {
-		if (!dateVal) return dateVal
+		if (!dateVal) return null
 		return /^\d+$/.test(String(dateVal)) ? Number(dateVal) : dateVal
 	}
 
 	const getSafeDateValue = (dateString: any) => {
 		if (!dateString) return ''
-
 		try {
-			const date = new Date(parseSafeDate(dateString))
+			const parsed = parseSafeDate(dateString)
+			if (!parsed) return ''
+			const date = new Date(parsed)
 			if (isNaN(date.getTime())) return ''
 
 			const year = date.getFullYear()

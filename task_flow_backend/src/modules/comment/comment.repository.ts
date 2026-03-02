@@ -33,7 +33,6 @@ export class CommentRepository {
 		})
 	}
 
-	// Мягкое удаление через deletedAt
 	async softDelete(commentId: string, userId: string) {
 		return this.prisma.comment.update({
 			where: { id: commentId, userId },

@@ -29,7 +29,6 @@ export class ColumnRepository {
 		})
 	}
 
-	// Проверяем что колонка принадлежит доске где юзер имеет доступ
 	async isAccessible(columnId: string, userId: string): Promise<boolean> {
 		const column = await this.prisma.column.findFirst({
 			where: {

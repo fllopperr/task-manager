@@ -5,6 +5,14 @@ import { REGISTER } from '../lib/graphql/auth'
 import { useAuthActions } from '../store/auth.store'
 import type { AuthResponse } from '../types'
 
+export type RegisterErrors = {
+	username?: string
+	email?: string
+	password?: string
+	confirmPassword?: string
+	common?: string
+}
+
 export function useRegister() {
 	const [formData, setFormData] = useState({
 		username: '',
@@ -12,7 +20,7 @@ export function useRegister() {
 		password: '',
 		confirmPassword: ''
 	})
-	const [error, setError] = useState('')
+	const [errors, setErrors] = useState<RegisterErrors>({})
 
 	const navigate = useNavigate()
 	const { setAuth } = useAuthActions()
@@ -25,27 +33,51 @@ export function useRegister() {
 				navigate('/')
 			},
 			onError: err => {
-				setError(err.graphQLErrors[0]?.message || 'Ошибка при регистрации')
+				const message =
+					err.graphQLErrors[0]?.message || 'Ошибка при регистрации'
+
+				if (message.toLowerCase().includes('email')) {
+					setErrors({ email: 'Этот email уже занят' })
+				} else if (message.toLowerCase().includes('username')) {
+					setErrors({ username: 'Имя пользователя занято' })
+				} else {
+					setErrors({ common: message })
+				}
 			}
 		}
 	)
 
 	const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-		setFormData(prev => ({ ...prev, [e.target.id]: e.target.value }))
-		if (error) setError('')
+		const { id, value } = e.target
+		setFormData(prev => ({ ...prev, [id]: value }))
+
+		if (errors[id as keyof RegisterErrors] || errors.common) {
+			setErrors(prev => ({ ...prev, [id]: undefined, common: undefined }))
+		}
 	}
 
 	const handleSubmit = (e: React.FormEvent) => {
 		e.preventDefault()
-		setError('')
+		const newErrors: RegisterErrors = {}
+
+		if (!formData.username.trim()) {
+			newErrors.username = 'Введите ваше имя'
+		}
+
+		if (!formData.email.trim() || !formData.email.includes('@')) {
+			newErrors.email = 'Введите корректный email'
+		}
 
 		if (formData.password.length < 8) {
-			setError('Пароль должен быть не менее 8 символов')
-			return
+			newErrors.password = 'Пароль должен быть не менее 8 символов'
 		}
 
 		if (formData.password !== formData.confirmPassword) {
-			setError('Пароли не совпадают')
+			newErrors.confirmPassword = 'Пароли не совпадают'
+		}
+
+		if (Object.keys(newErrors).length > 0) {
+			setErrors(newErrors)
 			return
 		}
 
@@ -63,7 +95,7 @@ export function useRegister() {
 	return {
 		formData,
 		loading,
-		error,
+		errors,
 		handleChange,
 		handleSubmit
 	}

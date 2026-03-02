@@ -25,8 +25,6 @@ export function useBoard(boardId: string | undefined): UseBoardReturn {
 
 	if (!client) return { board: data?.board, loading, error }
 
-	// ---------------- TASK SUBSCRIPTIONS ----------------
-
 	useSubscription(SUBS.TASK_CREATED_SUB, {
 		variables: { boardId },
 		skip: !boardId,
@@ -73,7 +71,6 @@ export function useBoard(boardId: string | undefined): UseBoardReturn {
 			const moved = data?.taskMoved
 			if (!moved) return
 
-			// При перемещении мы просто обновляем поля существующей задачи в кэше
 			client.cache.modify({
 				id: client.cache.identify({ __typename: 'Task', id: moved.id }),
 				fields: {
@@ -95,8 +92,6 @@ export function useBoard(boardId: string | undefined): UseBoardReturn {
 			client.cache.gc()
 		}
 	})
-
-	// ---------------- COMMENT SUBSCRIPTIONS ----------------
 
 	useSubscription(SUBS.COMMENT_ADDED_SUB, {
 		variables: { boardId },
@@ -154,8 +149,6 @@ export function useBoard(boardId: string | undefined): UseBoardReturn {
 		}
 	})
 
-	// ---------------- COLUMN SUBSCRIPTIONS ----------------
-
 	useSubscription(SUBS.COLUMN_CREATED_SUB, {
 		variables: { boardId },
 		skip: !boardId,
@@ -208,22 +201,16 @@ export function useBoard(boardId: string | undefined): UseBoardReturn {
 		}
 	})
 
-	// ---------------- PRESENCE & TYPING ----------------
-
 	useSubscription(SUBS.USER_PRESENCE_SUB, {
 		variables: { boardId },
 		skip: !boardId,
-		onData: ({ data: { data } }) => {
-			// Реализация зависит от вашего глобального стора (Zustand/Redux)
-		}
+		onData: ({ data: { data } }) => {}
 	})
 
 	useSubscription(SUBS.USER_TYPING_SUB, {
 		variables: { boardId },
 		skip: !boardId,
-		onData: ({ data: { data } }) => {
-			// Реализация зависит от вашего глобального стора (Zustand/Redux)
-		}
+		onData: ({ data: { data } }) => {}
 	})
 
 	return {

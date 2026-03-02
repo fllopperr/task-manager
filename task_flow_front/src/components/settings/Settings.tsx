@@ -96,7 +96,6 @@ export function SettingsPage() {
 				</div>
 
 				<div className='flex gap-8'>
-					{/* Sidebar Tabs */}
 					<div className='w-[300px] bg-white rounded-[24px] p-6 h-fit'>
 						<button
 							onClick={() => setActiveTab('profile')}

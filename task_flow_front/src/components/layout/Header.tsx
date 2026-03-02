@@ -90,7 +90,6 @@ export const Header = memo(function Header({
 	const { openModal } = useUIActions()
 	const user = useAuthStore(s => s.user)
 
-	// ✅ Извлекаем usernames из members + owner
 	const assigneeNames = useMemo(() => {
 		const names = new Set<string>()
 
@@ -146,7 +145,6 @@ export const Header = memo(function Header({
 
 					{filtersOpen && (
 						<div className='absolute top-32 left-[336px] w-[260px] bg-black text-white rounded-[24px] p-5 shadow-2xl z-50 space-y-5'>
-							{/* ✅ Теги из GraphQL enum */}
 							<FilterSection
 								title='Метки'
 								items={ALL_TAGS}
@@ -154,7 +152,6 @@ export const Header = memo(function Header({
 								onChange={next => onChangeFilters({ ...filters, tags: next })}
 							/>
 
-							{/* ✅ Исполнители из БД */}
 							{assigneeNames.length > 0 && (
 								<FilterSection
 									title='Исполнители'
@@ -166,7 +163,6 @@ export const Header = memo(function Header({
 								/>
 							)}
 
-							{/* ✅ Приоритеты из GraphQL enum */}
 							<FilterSection
 								title='Приоритет'
 								items={ALL_PRIORITIES}

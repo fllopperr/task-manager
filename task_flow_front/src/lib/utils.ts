@@ -14,7 +14,7 @@ export function formatDate(
 	if (!date) return ''
 	try {
 		const parsedDate =
-			typeof date === 'string' ? parseISO(date) : new Date(date)
+			typeof date === 'string' ? parseISO(date) : new Date(date as any)
 		if (!isValid(parsedDate)) return ''
 		return format(parsedDate, pattern, { locale: ru })
 	} catch {
@@ -28,32 +28,12 @@ export function formatTaskDate(
 	if (!date) return ''
 	try {
 		const parsedDate =
-			typeof date === 'string' ? parseISO(date) : new Date(date)
+			typeof date === 'string' ? parseISO(date) : new Date(date as any)
 		if (!isValid(parsedDate)) return ''
 		return format(parsedDate, 'd MMM', { locale: ru }).replace('.', '')
 	} catch {
 		return ''
 	}
-}
-
-export function getPriorityColor(priority?: string) {
-	const colors: Record<string, string> = {
-		LOW: 'bg-blue-500',
-		MEDIUM: 'bg-yellow-500',
-		HIGH: 'bg-orange-500',
-		URGENT: 'bg-red-500'
-	}
-	return priority ? colors[priority] || 'bg-gray-400' : 'bg-gray-400'
-}
-
-export function getPriorityLabel(priority?: string) {
-	const labels: Record<string, string> = {
-		LOW: 'Низкий',
-		MEDIUM: 'Средний',
-		HIGH: 'Высокий',
-		URGENT: 'Срочный'
-	}
-	return priority ? labels[priority] || 'Без приоритета' : 'Без приоритета'
 }
 
 export function getPriorityData(priority?: string) {
@@ -82,7 +62,6 @@ export function getPriorityData(priority?: string) {
 			iconColor: 'text-red-500'
 		}
 	}
-
 	return priority && config[priority]
 		? config[priority]
 		: {

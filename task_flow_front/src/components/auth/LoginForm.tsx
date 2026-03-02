@@ -5,19 +5,19 @@ import { Label } from '../../components/ui/label'
 import { useLogin } from '../../hooks/useLogin'
 
 export function LoginForm() {
-	const { formData, loading, error, handleChange, handleSubmit } = useLogin()
+	const { formData, loading, errors, handleChange, handleSubmit } = useLogin()
 
 	return (
 		<div className='text-black w-full max-w-md space-y-8 p-4'>
 			<div className='text-center'>
-				<h2 className='text-3xl font-bold tracking-tight'>С возвращением</h2>
+				<h2 className='text-3xl font-bold tracking-tight'>Добро пожаловать</h2>
 				<p className='mt-2 text-sm text-muted-foreground'>
-					Войдите в систему для управления задачами
+					Войдите, чтобы начать работу
 				</p>
 			</div>
 
 			<form onSubmit={handleSubmit} className='space-y-5'>
-				<div className='space-y-2'>
+				<div className='space-y-1'>
 					<Label htmlFor='email'>Электронная почта</Label>
 					<Input
 						id='email'
@@ -25,13 +25,22 @@ export function LoginForm() {
 						placeholder='name@company.com'
 						value={formData.email}
 						onChange={handleChange}
-						required
 						disabled={loading}
 						autoComplete='email'
+						className={
+							errors.email
+								? 'border-destructive focus-visible:ring-destructive'
+								: ''
+						}
 					/>
+					{errors.email && (
+						<p className='text-[11px] text-destructive font-semibold ml-1'>
+							{errors.email}
+						</p>
+					)}
 				</div>
 
-				<div className='space-y-2'>
+				<div className='space-y-1'>
 					<Label htmlFor='password'>Пароль</Label>
 					<Input
 						id='password'
@@ -39,21 +48,30 @@ export function LoginForm() {
 						placeholder='••••••••'
 						value={formData.password}
 						onChange={handleChange}
-						required
 						disabled={loading}
 						autoComplete='current-password'
+						className={
+							errors.password
+								? 'border-destructive focus-visible:ring-destructive'
+								: ''
+						}
 					/>
+					{errors.password && (
+						<p className='text-[11px] text-destructive font-semibold ml-1'>
+							{errors.password}
+						</p>
+					)}
 				</div>
 
-				{error && (
-					<div className='p-3 text-xs font-medium bg-destructive/10 text-destructive rounded-md text-center border border-destructive/20 animate-in fade-in zoom-in duration-200'>
-						{error}
+				{errors.common && (
+					<div className='p-3 text-xs font-medium bg-destructive/10 text-destructive rounded-md text-center border border-destructive/20'>
+						{errors.common}
 					</div>
 				)}
 
 				<Button
 					type='submit'
-					className='w-full bg-black hover:bg-black/90 text-white active:scale-95 transition-transform'
+					className='w-full bg-black hover:bg-black/90 text-white active:scale-95 transition-all'
 					disabled={loading}
 				>
 					{loading ? 'Входим...' : 'Войти'}
@@ -63,7 +81,7 @@ export function LoginForm() {
 					<span className='text-muted-foreground'>Нет аккаунта? </span>
 					<Link
 						to='/register'
-						className='text-foreground font-semibold underline underline-offset-4 hover:text-black transition-colors'
+						className='text-black font-semibold underline underline-offset-4 hover:text-muted-foreground transition-colors'
 					>
 						Зарегистрироваться
 					</Link>

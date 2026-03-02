@@ -9,7 +9,6 @@ function requireAuth(ctx: GraphQlContext): string {
 
 export const subscriptionResolvers = {
 	Subscription: {
-		// --- Task Events ---
 		taskCreated: {
 			subscribe: (
 				_: unknown,
@@ -67,7 +66,6 @@ export const subscriptionResolvers = {
 			resolve: (payload: any) => payload.taskDeleted
 		},
 
-		// --- Comment Events ---
 		commentAdded: {
 			subscribe: (
 				_: unknown,
@@ -104,7 +102,6 @@ export const subscriptionResolvers = {
 			resolve: (payload: any) => payload.commentDeleted
 		},
 
-		// --- Board Member Events ---
 		boardMemberAdded: {
 			subscribe: (
 				_: unknown,
@@ -129,7 +126,6 @@ export const subscriptionResolvers = {
 			resolve: (payload: any) => payload.boardMemberRemoved
 		},
 
-		// --- Column Events ---
 		columnCreated: {
 			subscribe: (
 				_: unknown,
@@ -166,7 +162,6 @@ export const subscriptionResolvers = {
 			resolve: (payload: any) => payload.columnDeleted
 		},
 
-		// --- Presence & Activity ---
 		userPresence: {
 			subscribe: (
 				_: unknown,

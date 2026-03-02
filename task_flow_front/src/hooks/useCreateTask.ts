@@ -14,7 +14,6 @@ export function useCreateTask(
 	const [priority, setPriority] = useState<Priority>('MEDIUM')
 	const [columnId, setColumnId] = useState('')
 
-	// Устанавливаем начальную колонку
 	useEffect(() => {
 		if (initialColumnId && !columnId) {
 			setColumnId(initialColumnId)

@@ -4,6 +4,19 @@ import type { CreateTaskInput, UpdateTaskInput } from './task.schema.js'
 export class TaskRepository {
 	constructor(private prisma: PrismaClient) {}
 
+	private readonly taskInclude = {
+		column: { select: { boardId: true } },
+		owner: { select: { id: true, username: true, email: true } },
+		assignee: { select: { id: true, username: true, email: true } },
+		comments: {
+			where: { deletedAt: null },
+			include: {
+				user: { select: { id: true, username: true, email: true } }
+			},
+			orderBy: { createdAt: 'asc' as const }
+		}
+	}
+
 	async create(ownerId: string, data: CreateTaskInput) {
 		const lastTask = await this.prisma.task.findFirst({
 			where: { columnId: data.columnId },
@@ -24,11 +37,7 @@ export class TaskRepository {
 				limitDate: data.limitDate ? new Date(data.limitDate) : null,
 				position: newPosition
 			},
-			include: {
-				column: { select: { boardId: true } },
-				owner: { select: { id: true, username: true, email: true } },
-				assignee: { select: { id: true, username: true, email: true } }
-			}
+			include: this.taskInclude
 		})
 	}
 
@@ -50,18 +59,7 @@ export class TaskRepository {
 		return this.prisma.task.update({
 			where: { id: taskId },
 			data: updateData,
-			include: {
-				column: { select: { boardId: true } },
-				owner: { select: { id: true, username: true, email: true } },
-				assignee: { select: { id: true, username: true, email: true } },
-				comments: {
-					where: { deletedAt: null },
-					include: {
-						user: { select: { id: true, username: true, email: true } }
-					},
-					orderBy: { createdAt: 'asc' }
-				}
-			}
+			include: this.taskInclude
 		})
 	}
 
@@ -73,9 +71,7 @@ export class TaskRepository {
 		return this.prisma.task.update({
 			where: { id: taskId },
 			data: { columnId: newColumnId, position: newPosition },
-			include: {
-				column: { select: { boardId: true } }
-			}
+			include: this.taskInclude
 		})
 	}
 
@@ -91,30 +87,10 @@ export class TaskRepository {
 	async findById(taskId: string) {
 		return this.prisma.task.findUnique({
 			where: { id: taskId },
-			include: {
-				owner: { select: { id: true, username: true, email: true } },
-				assignee: { select: { id: true, username: true, email: true } },
-				column: { select: { boardId: true } },
-				comments: {
-					where: { deletedAt: null },
-					include: {
-						user: { select: { id: true, username: true, email: true } }
-					},
-					orderBy: { createdAt: 'asc' }
-				}
-			}
+			include: this.taskInclude
 		})
 	}
 
-	async isOwner(taskId: string, userId: string): Promise<boolean> {
-		const task = await this.prisma.task.findFirst({
-			where: { id: taskId, ownerId: userId },
-			select: { id: true }
-		})
-		return task !== null
-	}
-
-	// Проверяем доступ к задаче через доску
 	async isAccessible(taskId: string, userId: string): Promise<boolean> {
 		const task = await this.prisma.task.findFirst({
 			where: {

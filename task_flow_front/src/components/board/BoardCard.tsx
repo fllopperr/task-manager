@@ -25,7 +25,6 @@ export const BoardCard = React.memo(function BoardCard({
 			to={`/board/${board.id}`}
 			className='group flex flex-col p-8 rounded-[32px] bg-white border-2 border-[#E9ECEF] hover:border-[#1A1D21] hover:shadow-xl transition-all duration-300 relative overflow-hidden h-[200px]'
 		>
-			{/* Delete button */}
 			{onDelete && (
 				<button
 					onClick={handleDelete}
@@ -42,7 +41,6 @@ export const BoardCard = React.memo(function BoardCard({
 					<Layout className='w-6 h-6' />
 				</div>
 
-				{/* Tasks count */}
 				<span className='px-3 py-1 bg-[#F1F3F5] rounded-full text-[12px] font-bold text-[#1A1D21]'>
 					{board._count?.tasks || 0} задач
 				</span>
@@ -57,7 +55,6 @@ export const BoardCard = React.memo(function BoardCard({
 				</p>
 			</div>
 
-			{/* Arrow */}
 			<ArrowRight className='absolute bottom-8 right-8 w-6 h-6 text-[#1A1D21] opacity-0 group-hover:opacity-100 group-hover:translate-x-2 transition-all' />
 		</Link>
 	)

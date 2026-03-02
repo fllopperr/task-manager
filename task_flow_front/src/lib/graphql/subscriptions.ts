@@ -1,7 +1,6 @@
 import { gql } from '@apollo/client'
 import { TASK_FIELDS, COMMENT_FIELDS, USER_FIELDS } from './fragments'
 
-// --- Task Subscriptions ---
 export const TASK_CREATED_SUB = gql`
 	subscription TaskCreated($boardId: ID!) {
 		taskCreated(boardId: $boardId) {
@@ -36,7 +35,6 @@ export const TASK_DELETED_SUB = gql`
 	}
 `
 
-// --- Comment Subscriptions ---
 export const COMMENT_ADDED_SUB = gql`
 	subscription CommentAdded($boardId: ID!) {
 		commentAdded(boardId: $boardId) {
@@ -61,7 +59,6 @@ export const COMMENT_DELETED_SUB = gql`
 	}
 `
 
-// --- Column Subscriptions ---
 export const COLUMN_CREATED_SUB = gql`
 	subscription ColumnCreated($boardId: ID!) {
 		columnCreated(boardId: $boardId) {
@@ -88,7 +85,6 @@ export const COLUMN_DELETED_SUB = gql`
 	}
 `
 
-// --- Board Member Subscriptions ---
 export const BOARD_MEMBER_ADDED_SUB = gql`
 	subscription BoardMemberAdded($boardId: ID!) {
 		boardMemberAdded(boardId: $boardId) {
@@ -108,7 +104,6 @@ export const BOARD_MEMBER_REMOVED_SUB = gql`
 	}
 `
 
-// --- Presence & Real-time UI ---
 export const USER_PRESENCE_SUB = gql`
 	subscription UserPresence($boardId: ID!) {
 		userPresence(boardId: $boardId) {

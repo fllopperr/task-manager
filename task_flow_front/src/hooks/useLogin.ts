@@ -5,12 +5,18 @@ import { useMutation } from '@apollo/client'
 import type { AuthResponse } from '../types'
 import { LOGIN } from '../lib/graphql/auth'
 
+export type LoginErrors = {
+	email?: string
+	password?: string
+	common?: string
+}
+
 export function useLogin() {
 	const [formData, setFormData] = useState({
 		email: '',
 		password: ''
 	})
-	const [error, setError] = useState('')
+	const [errors, setErrors] = useState<LoginErrors>({})
 
 	const navigate = useNavigate()
 	const { setAuth } = useAuthActions()
@@ -21,20 +27,41 @@ export function useLogin() {
 			navigate('/')
 		},
 		onError: err => {
-			setError(
-				err.graphQLErrors[0]?.message || 'Ошибка входа. Проверьте данные.'
-			)
+			const msg = err.graphQLErrors[0]?.message || 'Ошибка входа'
+
+			if (
+				msg.toLowerCase().includes('email') ||
+				msg.toLowerCase().includes('user not found')
+			) {
+				setErrors({ email: 'Пользователь с таким email не найден' })
+			} else if (msg.toLowerCase().includes('password')) {
+				setErrors({ password: 'Неверный пароль' })
+			} else {
+				setErrors({ common: msg })
+			}
 		}
 	})
 
 	const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-		setFormData(prev => ({ ...prev, [e.target.id]: e.target.value }))
-		if (error) setError('')
+		const { id, value } = e.target
+		setFormData(prev => ({ ...prev, [id]: value }))
+		if (errors[id as keyof LoginErrors] || errors.common) {
+			setErrors(prev => ({ ...prev, [id]: undefined, common: undefined }))
+		}
 	}
 
 	const handleSubmit = (e: React.FormEvent) => {
 		e.preventDefault()
-		setError('')
+		setErrors({})
+
+		if (!formData.email.trim()) {
+			setErrors(prev => ({ ...prev, email: 'Введите email' }))
+			return
+		}
+		if (!formData.password) {
+			setErrors(prev => ({ ...prev, password: 'Введите пароль' }))
+			return
+		}
 
 		login({
 			variables: {
@@ -49,7 +76,7 @@ export function useLogin() {
 	return {
 		formData,
 		loading,
-		error,
+		errors,
 		handleChange,
 		handleSubmit
 	}

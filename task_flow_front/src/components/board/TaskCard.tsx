@@ -5,6 +5,7 @@ import { useMutation } from '@apollo/client'
 import { useParams } from 'react-router-dom'
 import { useUIActions } from '../../store/ui.store'
 import { getPriorityData, formatTaskDate } from '../../lib/utils'
+import { useDateFormatter } from '../../hooks/useDateFormatter'
 import { DELETE_TASK } from '../../lib/graphql/task'
 import { GET_BOARD } from '../../lib/graphql/board'
 import { AlertCircle, X, User, Calendar } from 'lucide-react'
@@ -21,6 +22,7 @@ export const TaskCard = memo(function TaskCard({
 }: TaskCardProps) {
 	const { boardId } = useParams<{ boardId: string }>()
 	const { openModal } = useUIActions()
+	const { parseSafeDate } = useDateFormatter()
 	const { label: priorityLabel } = getPriorityData(task.priority)
 
 	const {
@@ -92,9 +94,6 @@ export const TaskCard = memo(function TaskCard({
 				cursor: isDragging ? 'grabbing' : 'grab'
 			}
 
-	const parseSafeDate = (dateVal: any) =>
-		dateVal ? (/^\d+$/.test(String(dateVal)) ? Number(dateVal) : dateVal) : null
-
 	return (
 		<div
 			ref={overlay ? undefined : setNodeRef}
@@ -151,7 +150,6 @@ export const TaskCard = memo(function TaskCard({
 				)}
 			</div>
 
-			{/* Блок исполнителя */}
 			<div className='mt-auto flex items-center gap-3'>
 				<div className='w-9 h-9 bg-black rounded-2xl flex-shrink-0 flex items-center justify-center shadow-lg'>
 					{task.assignee?.username ? (
