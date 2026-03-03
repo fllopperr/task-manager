@@ -95,7 +95,7 @@ src/
 
 ```bash
 # Клонировать репозиторий
-git clone <repo-url>
+git clone <https://github.com/fllopperr/task-manager/tree/main/task_flow_front>
 cd taskflow-front
 
 # Установить зависимости
