@@ -1,75 +1,123 @@
-# React + TypeScript + Vite
+# 🚀 TaskFlow Frontend
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+Современное React-приложение для управления задачами в стиле Kanban с real-time синхронизацией.
 
-Currently, two official plugins are available:
+## ✨ Возможности
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) (or [oxc](https://oxc.rs) when used in [rolldown-vite](https://vite.dev/guide/rolldown)) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+- 📋 **Kanban доски** - создание и управление досками с колонками
+- 🎯 **Задачи** - создание, редактирование, перетаскивание (drag-and-drop)
+- 👥 **Совместная работа** - приглашение участников, назначение исполнителей(в разработке)
+- 🔄 **Real-time синхронизация** - WebSocket subscriptions через GraphQL
+- 💬 **Комментарии** - обсуждение задач в реальном времени(в разработке)
+- 🏷️ **Метки и приоритеты** - организация и фильтрация задач
+- 📅 **Сроки** - установка дедлайнов для задач
+- 🎨 **Современный UI** - минималистичный дизайн с Tailwind CSS
+- ⚡ **Оптимистичные обновления** - мгновенный отклик интерфейса
 
-## React Compiler
+## 🛠️ Технологический стек
 
-The React Compiler is enabled on this template. See [this documentation](https://react.dev/learn/react-compiler) for more information.
+### Core
 
-Note: This will impact Vite dev & build performances.
+- **React** - UI библиотека
+- **TypeScript** - типизация
+- **Vite** - сборщик и dev-сервер
 
-## Expanding the ESLint configuration
+### State Management
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+- **Zustand** - глобальное состояние (auth, UI)
+- **Apollo Client** - GraphQL клиент + cache
 
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
+### GraphQL & Real-time
 
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
+- **@apollo/client** - GraphQL запросы, мутации, subscriptions
+- **graphql-ws** - WebSocket транспорт для subscriptions
 
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+### UI & Styling
+
+- **Tailwind CSS** - utility-first CSS
+- **shadcn/ui** - компоненты (Dialog, Select, etc.)
+- **Radix UI** - headless компоненты
+- **Lucide React** - иконки
+
+### Drag & Drop
+
+- **@dnd-kit** - drag-and-drop для Kanban
+  - `@dnd-kit/core` - ядро
+  - `@dnd-kit/sortable` - сортировка
+  - `@dnd-kit/utilities` - утилиты
+
+### Routing
+
+- **React Router** - маршрутизация
+
+## 📁 Структура проекта
+
+```
+src/
+├── assets/           # Статические файлы
+├── components/       # React компоненты
+│   ├── auth/        # Авторизация (LoginForm, RegisterForm)
+│   ├── board/       # Доска (Board, Column, TaskCard)
+│   ├── layout/      # Layout (Sidebar, Header)
+│   │── settings/		 # Настройки
+│   ├── task/        # Задачи (TaskDetailModal, CreateTaskModal)
+│   └── ui/          # UI компоненты (Button, Dialog, Select)
+├── constants/       # Константы (priorities, tags)
+├── hooks/           # Custom hooks
+├── lib/             # Утилиты
+│   ├── apollo.ts    # Apollo Client конфигурация
+│   ├── graphql/     # GraphQL операции
+│   │   ├── fragments.ts    # Фрагменты
+│   │   ├── auth.ts         # Авторизация
+│   │   ├── board.ts        # Доски
+│   │   ├── task.ts         # Задачи
+│   │   ├── comment.ts      # Комментарии
+│   │   └── subscriptions.ts # WebSocket subscriptions
+│   └── utils.ts     # Вспомогательные функции
+├── pages/           # Страницы
+│   ├── LoginPage.tsx
+│   ├── RegisterPage.tsx
+│   ├── BoardsPage.tsx
+│   ├── BoardPage.tsx
+│   └── SettingsPage.tsx
+├── store/           # Zustand stores
+│   ├── auth.store.ts  # Авторизация и пользователь
+│   └── ui.store.ts    # UI состояние (модалки)
+├── types/           # TypeScript типы
+│   └── index.ts
+├── App.tsx          # Главный компонент
+└── main.tsx         # Entry point
 ```
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+## 🚀 Быстрый старт
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
+### Установка
 
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+```bash
+# Клонировать репозиторий
+git clone <repo-url>
+cd taskflow-front
+
+# Установить зависимости
+npm install
+```
+
+### Переменные окружения
+
+Создай `.env` файл:
+
+```env
+VITE_API_URL=http://localhost:4000/graphql
+VITE_WS_URL=ws://localhost:4000/graphql
+```
+
+### Запуск
+
+```bash
+# Development
+npm run dev
+
+# Production build
+npm run build
+
 ```
